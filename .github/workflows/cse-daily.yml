@@ -2,7 +2,7 @@ name: CSE Daily CSV
 
 on:
   schedule:
-    - cron: "0 10 * * *"   # 09:00 Sri Lanka time
+    - cron: "0 10 * * *"   # 03:30 PM Sri Lanka time
   workflow_dispatch:
 
 jobs:
@@ -22,13 +22,13 @@ jobs:
         run: |
           pip install requests pandas
 
-      - name: Run downloader
+      - name: Run downloaders
         run: |
-          python download_api.py
-          python download_api2.py
+          python download_api.py || true
+          python download_api2.py || true
 
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cse-trade-summary
+          name: cse-daily-files
           path: data/*.csv
