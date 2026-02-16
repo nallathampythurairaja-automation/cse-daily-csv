@@ -42,7 +42,7 @@ def make_driver(download_dir: str) -> webdriver.Chrome:
 
 
 def click_show_all_rows(driver: webdriver.Chrome):
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 30)
 
     # The "Show" dropdown button (currently shows "25") is near text "Show" and "Entries"
     show_btn = wait.until(EC.element_to_be_clickable((
@@ -103,7 +103,7 @@ def wait_for_new_download(download_dir: str, before_set, timeout: int = 180):
 
 
 def download_csv(driver, download_dir: str):
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 30)
 
     before_set = snapshot_files(download_dir)
 
@@ -146,6 +146,8 @@ def finalize_download(downloaded_path: str, download_dir: str) -> str:
 
 
 def main():
+    print("Download dir:", DOWNLOAD_DIR)
+    
     driver = make_driver(DOWNLOAD_DIR)
     try:
         driver.get(URL)
