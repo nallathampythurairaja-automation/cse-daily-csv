@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 
 OUT_DIR = "data"
-API_URL = "https://www.cse.lk/equity/detailed-trades?page=equity"
+API_URL = "https://www.cse.lk/equity/detailed-trades"
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
