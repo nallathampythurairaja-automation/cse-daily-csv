@@ -18,14 +18,22 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          pip install requests pandas
+          pip install requests pandas selenium
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Run downloaders
         run: |
           python download_api.py
           python download_api2.py
+          python dailydownload2.py
+
+      - name: List data folder
+        run: |
+          ls -lah data || true
 
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
