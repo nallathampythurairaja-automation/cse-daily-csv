@@ -2,7 +2,7 @@ name: CSE Daily CSV
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # runs daily at 07:00 Sri Lanka time
+    - cron: "30 3 * * *"   # 09:00 Sri Lanka time
   workflow_dispatch:
 
 jobs:
@@ -20,14 +20,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install selenium
-
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
+          pip install requests pandas
 
       - name: Run downloader
         run: |
-          python dailydownload.py
+          python download_api.py
 
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
