@@ -26,6 +26,7 @@ jobs:
         run: |
           python download_api.py || true
           python download_api2.py || true
+          python dailydownload2.py || true
 
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
