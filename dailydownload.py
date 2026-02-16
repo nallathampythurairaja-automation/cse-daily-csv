@@ -44,16 +44,13 @@ def make_driver(download_dir: str) -> webdriver.Chrome:
 def click_show_all_rows(driver: webdriver.Chrome):
     wait = WebDriverWait(driver, 30)
 
-    # The "Show" dropdown button (currently shows "25") is near text "Show" and "Entries"
     show_btn = wait.until(EC.element_to_be_clickable((
         By.XPATH,
         "//span[normalize-space()='Show']/following::button[1]"
     )))
     show_btn.click()
 
-    # Try to pick "All" if available, otherwise pick the biggest number (e.g., 1000/500/250/100)
-    # Because menus are often rendered dynamically, we search by visible text.
-    candidates = ["All", "1000", "500", "250", "100", "50"]
+    candidates = ["All", "1000", "500", "250", "100"]
     for text in candidates:
         try:
             opt = wait.until(EC.element_to_be_clickable((
@@ -61,11 +58,12 @@ def click_show_all_rows(driver: webdriver.Chrome):
                 f"//*[self::button or self::div or self::li or self::a][normalize-space()='{text}']"
             )))
             opt.click()
+            print("Selected rows:", text)
+            time.sleep(4)  # give table time to reload
             return
         except Exception:
             continue
 
-    # If nothing matched, at least close the menu (best-effort)
     show_btn.click()
 
 
@@ -159,6 +157,11 @@ def main():
 
         click_show_all_rows(driver)
         time.sleep(2)  # allow table to reload fully
+
+        rows = driver.find_elements(By.CSS_SELECTOR, "div.trade-summary-table table tbody tr")
+        print("Row count before download:", len(rows))
+
+        
         csv_path = download_csv(driver, DOWNLOAD_DIR)
         csv_path = finalize_download(csv_path, DOWNLOAD_DIR)
         print("Downloaded:", csv_path)
