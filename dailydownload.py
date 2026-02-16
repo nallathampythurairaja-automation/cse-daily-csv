@@ -10,7 +10,10 @@ from datetime import datetime
 
 
 URL = "https://www.cse.lk/equity/trade-summary"  # update if your exact page differs
-DOWNLOAD_DIR = str(Path.home() / "Downloads" / "cse_daily")
+# Save inside the repo so GitHub Actions can upload/commit it
+BASE_DIR = Path(os.environ.get("GITHUB_WORKSPACE", Path.cwd()))
+DOWNLOAD_DIR = str(BASE_DIR / "data")   # will create repo/data/
+
 
 
 def make_driver(download_dir: str) -> webdriver.Chrome:
@@ -22,6 +25,9 @@ def make_driver(download_dir: str) -> webdriver.Chrome:
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True,
+        "profile.default_content_settings.popups": 0,
+        "download_restrictions": 0,
+
     }
     options.add_experimental_option("prefs", prefs)
 
@@ -114,7 +120,8 @@ def download_csv(driver, download_dir: str):
     # find CSV option
     csv_item = wait.until(EC.element_to_be_clickable((
         By.XPATH,
-        "//*[contains(text(),'CSV')]"
+        "//*[self::button or self::a or self::li or self::div][normalize-space()='CSV']"
+
     )))
     print("Found CSV option:", csv_item.text)
 
