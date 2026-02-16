@@ -2,7 +2,7 @@ name: CSE Daily CSV
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # 09:00 Sri Lanka time
+    - cron: "0 10 * * *"   # 09:00 Sri Lanka time
   workflow_dispatch:
 
 jobs:
