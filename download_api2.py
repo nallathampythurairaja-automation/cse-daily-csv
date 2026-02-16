@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 
 OUT_DIR = "data"
-API_URL = "https://www.cse.lk/api/tradeSummary"
+API_URL = "https://www.cse.lk/equity/detailed-trades?page=equity"
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -30,7 +30,7 @@ def main():
 
     df = pd.DataFrame(rows)
     today = datetime.utcnow().strftime("%Y-%m-%d")
-    out_path = os.path.join(OUT_DIR, f"cse_trade_summary_{today}.csv")
+    out_path = os.path.join(OUT_DIR, f"cse_detailed_trades_{today}.csv")
     df.to_csv(out_path, index=False, encoding="utf-8-sig")
     print("Saved:", out_path, "rows:", len(df))
 
