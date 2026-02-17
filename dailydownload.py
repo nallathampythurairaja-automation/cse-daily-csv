@@ -100,7 +100,7 @@ def wait_for_new_download(download_dir: str, before_set, timeout: int = 180):
 
 
 
-def download_xlsx(driver, download_dir: str):
+def download_csv(driver, download_dir: str):
     wait = WebDriverWait(driver, 30)
 
     before_set = snapshot_files(download_dir)
@@ -115,28 +115,30 @@ def download_xlsx(driver, download_dir: str):
 
     time.sleep(1)  # allow menu to appear
 
-    # click XLSX option
-    xlsx_item = wait.until(EC.element_to_be_clickable((
+    # find CSV option
+    csv_item = wait.until(EC.element_to_be_clickable((
         By.XPATH,
-        "//*[self::button or self::a or self::li or self::div][normalize-space()='XLS']"
-    )))
-    print("Found XLSX option:", xlsx_item.text)
+        "//*[self::button or self::a or self::li or self::div][normalize-space()='CSV']"
 
-    driver.execute_script("arguments[0].click();", xlsx_item)
-    print("Clicked XLSX")
+    )))
+    print("Found CSV option:", csv_item.text)
+
+    driver.execute_script("arguments[0].click();", csv_item)
+    print("Clicked CSV")
 
     return wait_for_new_download(download_dir, before_set, timeout=180)
 
-
 def finalize_download(downloaded_path: str, download_dir: str) -> str:
     today = datetime.now().strftime("%Y-%m-%d")
-    target = os.path.join(download_dir, f"cse_trade_summary_{today}.xls")
+    target = os.path.join(download_dir, f"cse_trade_summary_{today}.csv")
 
+    # overwrite if already exists
     if os.path.exists(target):
         os.remove(target)
 
     os.rename(downloaded_path, target)
     return target
+
 
 
 
@@ -159,11 +161,10 @@ def main():
         rows = driver.find_elements(By.CSS_SELECTOR, "div.trade-summary-table table tbody tr")
         print("Row count before download:", len(rows))
 
-
-       file_path = download_xlsx(driver, DOWNLOAD_DIR)
-       file_path = finalize_download(file_path, DOWNLOAD_DIR)
-       print("Downloaded:", file_path)
-
+        
+        csv_path = download_csv(driver, DOWNLOAD_DIR)
+        csv_path = finalize_download(csv_path, DOWNLOAD_DIR)
+        print("Downloaded:", csv_path)
 
 
     finally:
