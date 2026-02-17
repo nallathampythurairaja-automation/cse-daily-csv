@@ -118,7 +118,7 @@ def download_xlsx(driver, download_dir: str):
     # click XLSX option
     xlsx_item = wait.until(EC.element_to_be_clickable((
         By.XPATH,
-        "//*[self::button or self::a or self::li or self::div][normalize-space()='XLSX']"
+        "//*[self::button or self::a or self::li or self::div][normalize-space()='XLS']"
     )))
     print("Found XLSX option:", xlsx_item.text)
 
@@ -130,7 +130,7 @@ def download_xlsx(driver, download_dir: str):
 
 def finalize_download(downloaded_path: str, download_dir: str) -> str:
     today = datetime.now().strftime("%Y-%m-%d")
-    target = os.path.join(download_dir, f"cse_trade_summary_{today}.xlsx")
+    target = os.path.join(download_dir, f"cse_trade_summary_{today}.xls")
 
     if os.path.exists(target):
         os.remove(target)
