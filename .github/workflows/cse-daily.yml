@@ -28,8 +28,7 @@ jobs:
       - name: Run downloaders
         run: |
           python download_api.py
-          python download_api2.py
-          python dailydownload2.py
+  
 
       - name: List data folder
         run: |
