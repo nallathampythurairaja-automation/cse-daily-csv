@@ -1,0 +1,42 @@
+name: CSE Daily CSV
+
+on:
+  schedule:
+    - cron: "0 10 * * *"   # 03:30 PM Sri Lanka time
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          pip install requests pandas selenium openpyxl
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run downloaders
+        run: |
+          python download_api.py
+          python download_api2.py
+          python dailydownload2.py
+
+      - name: List data folder
+        run: |
+          ls -lah data || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cse-daily-files
+          path: data/*
