@@ -9,7 +9,7 @@ API_URL = "https://www.cse.lk/api/tradeSummary"
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    # Try POST then GET (CSE endpoints often accept POST)
+    # Try POST then GET
     r = requests.post(API_URL, data={}, timeout=30)
     if r.status_code != 200:
         r = requests.get(API_URL, timeout=30)
@@ -17,7 +17,7 @@ def main():
 
     data = r.json()
 
-    # Response is usually list OR dict containing a list
+    # Extract rows
     if isinstance(data, list):
         rows = data
     elif isinstance(data, dict):
@@ -30,8 +30,9 @@ def main():
 
     df = pd.DataFrame(rows)
     today = datetime.utcnow().strftime("%Y-%m-%d")
-    out_path = os.path.join(OUT_DIR, f"cse_trade_summary_{today}.csv")
-    df.to_csv(out_path, index=False, encoding="utf-8-sig")
+    out_path = os.path.join(OUT_DIR, f"cse_trade_summary_{today}.xlsx")
+
+    df.to_excel(out_path, index=False)
     print("Saved:", out_path, "rows:", len(df))
 
 if __name__ == "__main__":
